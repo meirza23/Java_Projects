@@ -1,0 +1,171 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Main {
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+    private static void createAndShowGUI() {
+        // Ana frame oluşturuluyor
+        JFrame frame = new JFrame("Üye Kayıt Formu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setBackground(Color.WHITE);
+        frame.setLayout(new BorderLayout());
+
+        // Ana panel oluşturuluyor
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+
+        // GridBagConstraint nesnesi oluşturuluyor
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(10, 10, 10, 10);
+
+        // Ad Soyad etiketi ve metin alanı ekleniyor
+        JLabel adSoyadLabel = new JLabel("Ad Soyad:");
+        panel.add(adSoyadLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField adSoyadField = new JTextField(20);
+        adSoyadField.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Yeşil çerçeve ekleniyor
+        panel.add(adSoyadField, gbc);
+
+        // Telefon Numarası etiketi ve metin alanı ekleniyor
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel telefonLabel = new JLabel("Telefon Numarası:");
+        panel.add(telefonLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField telefonField = new JTextField(20);
+        telefonField.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Yeşil çerçeve ekleniyor
+        panel.add(telefonField, gbc);
+
+        // E-mail etiketi ve metin alanı ekleniyor
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel emailLabel = new JLabel("E-mail:");
+        panel.add(emailLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField emailField = new JTextField(20);
+        emailField.setBorder(BorderFactory.createLineBorder(Color.GREEN)); // Yeşil çerçeve ekleniyor
+        panel.add(emailField, gbc);
+
+        // Cinsiyet paneli oluşturuluyor
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JPanel cinsiyetPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        cinsiyetPanel.setBackground(Color.WHITE);
+
+        JLabel cinsiyetLabel = new JLabel("Cinsiyet:");
+        cinsiyetPanel.add(cinsiyetLabel);
+
+        // Cinsiyet seçim kutuları oluşturuluyor
+        JCheckBox erkekCheckBox = new JCheckBox("Erkek");
+        erkekCheckBox.setBackground(Color.WHITE);
+        JCheckBox kadinCheckBox = new JCheckBox("Kadın");
+        kadinCheckBox.setBackground(Color.WHITE);
+        JCheckBox belirtmeCheckBox = new JCheckBox("Belirtmek İstemiyorum");
+        belirtmeCheckBox.setBackground(Color.WHITE);
+
+        cinsiyetPanel.add(erkekCheckBox);
+        cinsiyetPanel.add(kadinCheckBox);
+        cinsiyetPanel.add(belirtmeCheckBox);
+
+        panel.add(cinsiyetPanel, gbc);
+
+        // Kaydet düğmesi oluşturuluyor
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JButton kaydetButton = new JButton("Kaydet");
+        kaydetButton.setPreferredSize(new Dimension(150, 30));
+        kaydetButton.addActionListener(new KaydetActionListener(adSoyadField, telefonField, emailField, erkekCheckBox, kadinCheckBox, belirtmeCheckBox, frame));
+
+        panel.add(kaydetButton, gbc);
+
+        frame.add(panel, BorderLayout.CENTER);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setResizable(false);
+    }
+}
+
+class KaydetActionListener implements ActionListener {
+    private JTextField adSoyadField;
+    private JTextField telefonField;
+    private JTextField emailField;
+    private JCheckBox erkekCheckBox;
+    private JCheckBox kadinCheckBox;
+    private JCheckBox belirtmeCheckBox;
+    private JFrame frame;
+
+    public KaydetActionListener(JTextField adSoyadField, JTextField telefonField, JTextField emailField, JCheckBox erkekCheckBox, JCheckBox kadinCheckBox, JCheckBox belirtmeCheckBox, JFrame frame) {
+        this.adSoyadField = adSoyadField;
+        this.telefonField = telefonField;
+        this.emailField = emailField;
+        this.erkekCheckBox = erkekCheckBox;
+        this.kadinCheckBox = kadinCheckBox;
+        this.belirtmeCheckBox = belirtmeCheckBox;
+        this.frame = frame;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Kullanıcı girişleri alınıyor
+        String adSoyad = adSoyadField.getText();
+        String telefon = telefonField.getText();
+        String email = emailField.getText();
+        String cinsiyet = "";
+
+        // Cinsiyet seçimi kontrol ediliyor
+        if (erkekCheckBox.isSelected()) {
+            cinsiyet = "Erkek";
+        } else if (kadinCheckBox.isSelected()) {
+            cinsiyet = "Kadın";
+        } else if (belirtmeCheckBox.isSelected()) {
+            cinsiyet = "Belirtmek İstemiyorum";
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("uyeler.txt", true));
+            writer.write(adSoyad + "\t" + telefon + "\t" + email + "\t" + cinsiyet);
+            writer.newLine();
+            writer.close();
+            JOptionPane.showMessageDialog(frame, "Kayıt başarıyla eklendi.");
+
+            // Girdi alanları sıfırlanıyor
+            adSoyadField.setText("");
+            telefonField.setText("");
+            emailField.setText("");
+            erkekCheckBox.setSelected(false);
+            kadinCheckBox.setSelected(false);
+            belirtmeCheckBox.setSelected(false);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Kayıt eklenirken bir hata oluştu.");
+        }
+    }
+}

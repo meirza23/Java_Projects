@@ -1,0 +1,52 @@
+public class Main {
+    public static void main(String[] args) {
+        KolSaati kolSaati = new KolSaati(10, 30, 11, 00);
+        kolSaati.saatKac();
+        kolSaati.alarmKur(12, 30);
+        kolSaati.saatKac();
+        kolSaati.alarmCal();
+    }
+}
+
+class Saat {
+    int saat;
+    int dakika;
+
+    public Saat(int saat, int dakika) {
+        this.saat = saat;
+        this.dakika = dakika;
+    }
+
+    public void saatKac() {
+        System.out.println("Saat: " + saat + ":" + dakika);
+    }
+}
+
+class KolSaati extends Saat {
+    private int alarmSaat;
+    private int alarmDakika;
+
+    public KolSaati(int saat, int dakika, int alarmSaat, int alarmDakika) {
+        super(saat, dakika);
+        this.alarmSaat = alarmSaat;
+        this.alarmDakika = alarmDakika;
+    }
+
+    public void alarmKur(int saat, int dakika) {
+        this.alarmSaat = saat;
+        this.alarmDakika = dakika;
+    }
+
+    @Override
+    public void saatKac() {
+        System.out.println("Saat: " + super.saat + ":" + super.dakika + " Alarm: " + alarmSaat + ":" + alarmDakika);
+    }
+
+    public void alarmCal() {
+        if (super.saat == alarmSaat && super.dakika == alarmDakika) {
+            System.out.println("Alarm çalıştı!");
+        } else {
+            System.out.println("Alarm vakti gelmedi.");
+        }
+    }
+}

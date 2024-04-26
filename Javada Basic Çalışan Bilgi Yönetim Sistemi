@@ -1,0 +1,89 @@
+// Çalışan Bilgi Yönetim Sistemi
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Çalışan ID'sini giriniz: ");
+        int employeeID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Çalışanın isim soyismini giriniz: ");
+        String employeeNameSurname = scanner.nextLine();
+        System.out.print("Çalışanın çalışma saatini giriniz: ");
+        int employeeWorkHour = scanner.nextInt();
+        System.out.print("Çalışanın maaşını giriniz: ");
+        double employeeSalary = scanner.nextDouble();
+
+        Employee employee = new Employee();
+        employee.setEmployeeID(employeeID);
+        employee.setEmployeeNameSurname(employeeNameSurname);
+        employee.setEmployeeWorkHour(employeeWorkHour);
+        employee.setEmployeeSalary(employeeSalary);
+
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+        employeeInfo.showEmployeeInfo(employee);
+        employeeInfo.payRise(employee, 500);
+        employeeInfo.setWorkHour(employee, 20);
+
+        scanner.close();
+    }
+}
+
+class Employee {
+    private int employeeID;
+    private String employeeNameSurname;
+    private int employeeWorkHour;
+    private double employeeSalary;
+
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public String getEmployeeNameSurname() {
+        return employeeNameSurname;
+    }
+
+    public void setEmployeeNameSurname(String employeeNameSurname) {
+        this.employeeNameSurname = employeeNameSurname;
+    }
+
+    public int getEmployeeWorkHour() {
+        return employeeWorkHour;
+    }
+
+    public void setEmployeeWorkHour(int employeeWorkHour) {
+        this.employeeWorkHour = employeeWorkHour;
+    }
+
+    public double getEmployeeSalary() {
+        return employeeSalary;
+    }
+
+    public void setEmployeeSalary(double employeeSalary) {
+        this.employeeSalary = employeeSalary;
+    }
+}
+
+class EmployeeInfo {
+    public void showEmployeeInfo(Employee e) {
+        System.out.println("ID: " + e.getEmployeeID());
+        System.out.println("İsim Soyad: " + e.getEmployeeNameSurname());
+        System.out.println("Çalışma Saati: " + e.getEmployeeWorkHour());
+        System.out.println("Maaş: " + e.getEmployeeSalary());
+    }
+
+    public void payRise(Employee e, int miktar) {
+        double yeniMaas = e.getEmployeeSalary() + miktar;
+        e.setEmployeeSalary(yeniMaas);
+        System.out.println("Yeni Maaş: " + yeniMaas);
+    }
+
+    public void setWorkHour(Employee e, int saat) {
+        e.setEmployeeWorkHour(saat);
+        System.out.println("Yeni Çalışma Saati: " + saat);
+    }
+}

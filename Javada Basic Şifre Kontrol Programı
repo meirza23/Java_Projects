@@ -1,0 +1,31 @@
+import java.util.Scanner;
+public class SifreKontrol {
+public static int sifreUzunluk(String sifre){
+return sifre.length();
+}
+public static boolean sifreMinUzunluk(String sifre){
+return sifre.length() &gt;= 10;
+}
+public static int karakterKontrolEt(String sifre){
+if (sifre.contains(&quot;-&quot;) || sifre.contains(&quot;@&quot;) ||
+sifre.contains(&quot;!&quot;)) {
+return 1;
+} else {
+return 0;
+}
+}
+public static boolean sifreUygun(String sifre){
+return sifreMinUzunluk(sifre) &amp;&amp; (karakterKontrolEt(sifre) == 1);
+}
+public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+System.out.print(&quot;Lütfen bir şifre giriniz: &quot;);
+String sifre = scanner.nextLine();
+if (sifreUygun(sifre)) {
+System.out.println(&quot;Uygun şifre seçtiniz.&quot;);
+} else {
+System.out.println(&quot;Lütfen şifre kriterlerine uyan bir şifre
+seçiniz.&quot;);
+}
+}
+}

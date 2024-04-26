@@ -1,0 +1,248 @@
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Scanner;
+
+public class Main {
+    // Elit ve genel üyeleri tutmak için ArrayList'ler kullanılacak
+    static ArrayList<Uye> elitUyeler = new ArrayList<>();
+    static ArrayList<Uye> genelUyeler = new ArrayList<>();
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        DosyaIslemleri dosyaIslemi = new DosyaIslemleri();
+        MailGonder mailgonder1 = new MailGonder();
+
+        while (true) {
+            System.out.println("0- Çıkış");
+            System.out.println("1- Elit üye ekleme");
+            System.out.println("2- Genel Üye ekleme");
+            System.out.println("3- Mail Gönderme");
+
+            int secim = scanner.nextInt();
+
+            switch (secim) {
+                case 0:
+                    System.exit(0);
+
+                case 1:
+                    System.out.print("İsim: ");
+                    String isim = scanner.next();
+
+                    System.out.print("Soyisim: ");
+                    String soyisim = scanner.next();
+
+                    System.out.print("Email: ");
+                    String email = scanner.next();
+
+                    // Elit üye oluşturulup elitUyeler listesine eklenecek
+                    ElitUye elitUye = new ElitUye(isim, soyisim, email);
+                    elitUyeler.add(elitUye);
+
+                    // Bilgiler dosyaya kaydedilecek
+                    dosyaIslemi.dosyayaYaz("elitUyeler.txt", elitUye);
+
+                    System.out.println("Elit üye başarıyla eklendi.");
+                    break;
+
+                case 2:
+                    System.out.print("İsim: ");
+                    isim = scanner.next();
+
+                    System.out.print("Soyisim: ");
+                    soyisim = scanner.next();
+
+                    System.out.print("Email: ");
+                    email = scanner.next();
+
+                    // Genel üye oluşturulup genelUyeler listesine eklenecek
+                    GenelUye genelUye = new GenelUye(isim, soyisim, email);
+                    genelUyeler.add(genelUye);
+
+                    // Bilgiler dosyaya kaydedilecek
+                    dosyaIslemi.dosyayaYaz("genelUyeler.txt", genelUye);
+
+                    System.out.println("Genel üye başarıyla eklendi.");
+                    break;
+
+                case 3:
+                    System.out.println("1- Elit üyelere mail");
+                    System.out.println("2- Genel üyelere mail");
+                    System.out.println("3- Tüm üyelere mail");
+                    int mailSecim = scanner.nextInt();
+
+                    System.out.print("Mail başlığı: "); // Mailin başlığını alıyoruz
+                    String baslik = scanner.next();
+
+                    System.out.print("Mail içeriği: "); // Mailin içeriğini alıyoruz
+                    String mesaj = scanner.next();
+
+                    switch (mailSecim) {
+                        case 1:
+                            if (elitUyeler.size() > 0) { //arraylist de birileri var mı diye kontrol ediyoruz önce
+                                mailgonder1.mailGonder(baslik, mesaj, elitUyeler.get(0).getEmail());
+                                System.out.println("Elit üyelere mail gönderildi.");
+                            }
+                            else{
+                                System.out.println("Kayıtlı Elit Üye bulunamamaktadır!");
+                            }
+                            break;
+                        case 2:
+                            if (genelUyeler.size() > 0) { //arraylist de birileri var mı diye kontrol ediyoruz önce
+                                mailgonder1.mailGonder(baslik, mesaj, genelUyeler.get(0).getEmail());
+                                System.out.println("Genel üyelere mail gönderildi.");
+                            }
+                            else{
+                                System.out.println("Kayıtlı Genel Üye bulunamamaktadır!");
+                            }
+                            break;
+                        case 3:
+                            if (elitUyeler.size() > 0) { //arraylist de birileri var mı diye kontrol ediyoruz önce
+                                mailgonder1.mailGonder(baslik, mesaj, elitUyeler.get(0).getEmail());
+                                System.out.println("Elit üyelere mail gönderildi.");
+                            }
+                            if (genelUyeler.size() > 0) { //arraylist de birileri var mı diye kontrol ediyoruz önce
+                                mailgonder1.mailGonder(baslik, mesaj, genelUyeler.get(0).getEmail());
+                                System.out.println("Genel üyelere mail gönderildi.");
+                            }
+                            System.out.println("Tüm üyelere mail gönderildi.");
+                            break;
+                        default:
+                            System.out.println("Hatalı seçim.");
+                    }
+                    break;
+                default:
+                    System.out.println("Hatalı seçim.");
+
+
+            }
+        }
+    }
+
+}
+public class Uye {
+    private String isim;
+    private String soyisim;
+    private String email;
+
+    public Uye(String isim, String soyisim, String email) {
+        this.isim = isim;
+        this.soyisim = soyisim;
+        this.email = email;
+    }
+
+
+    public String getIsim() {
+
+        return isim;
+    }
+
+    public void setIsim(String isim) {
+
+        this.isim = isim;
+    }
+
+    public String getSoyisim() {
+
+        return soyisim;
+    }
+
+    public void setSoyisim(String soyisim) {
+
+        this.soyisim = soyisim;
+    }
+
+    public String getEmail() {
+
+        return email;
+    }
+
+    public void setEmail(String email) {
+
+        this.email = email;
+    }
+}
+class ElitUye extends Uye { //Kaltımla elitüye oluşturuyoruz
+    public ElitUye(String isim, String soyisim, String email) {
+
+        super(isim, soyisim, email);
+    }
+
+}
+
+class GenelUye extends Uye { //Kaltımla genelüye oluşturuyoruz
+    public GenelUye(String isim, String soyisim, String email) {
+
+        super(isim, soyisim, email);
+    }
+
+}
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+class DosyaIslemleri {
+    public void dosyayaYaz (String dosyaAdi, Uye uye) {
+        try {
+            FileWriter fileWriter = new FileWriter(dosyaAdi, true); //Dosya oluşturuyoruz
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(uye.getIsim() + "\t" + uye.getSoyisim() + "\t" + uye.getEmail() + "\n"); //Dosyaya yazdırıyoruz
+            bufferedWriter.close(); //Dosyayı kapatıyoruz
+            System.out.println("Dosyaya yazıldı: " + uye.getEmail());
+        } catch (IOException e) {
+            System.out.println("Dosya yazma hatası: " + e.getMessage());
+        }
+    }
+
+}
+import java.util.Properties;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public class MailGonder {
+
+    public static void main(String[] args) {
+
+    }
+
+    public static void mailGonder(String baslik, String mesaj, String email) {
+        String host = "smtp.office365.com"; // E-posta sunucusu(Gmail'i denedim çalışmadı o yüzden outlook'u yapıyorum)
+        String kimden = "kullaniciadiniz@gmail.com"; // Gönderen e-posta adresi
+        String kime = email; // Alıcı e-posta adresi
+        String baslik1 = baslik; // E-posta konusu
+        String mesaj1 = mesaj; // E-posta gövdesi
+
+        Properties properties = System.getProperties(); // E-posta sunucusuna bağlanmak için gerekli özellikleri ayarlayın
+        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.port", "587");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.smtp.auth", "true");
+
+        Session session = Session.getDefaultInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(kimden, "Şifreniz"); // E-posta sunucusu kullanıcı adı ve parolası
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(kimden));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(kime));
+            message.setSubject(baslik1);
+            message.setText(mesaj1);
+            Transport.send(message);
+            System.out.println("E-posta gönderildi.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,47 @@
+public class Main {
+
+    public static void main(String[] args) {
+
+        abstract class MusicPlayer {
+            public abstract void playMusic(String parca);
+
+            public abstract void saveMusic();
+
+            public abstract void stopMusic();
+        }
+
+        class AndroidMusicPlayer extends MusicPlayer {
+            @Override
+            public void playMusic(String parca) {
+                System.out.println("Android için " + parca + " müzik çalıyor");
+            }
+
+            @Override
+            public void saveMusic() {
+                System.out.println("Android için müzik kaydedildi");
+            }
+
+            @Override
+            public void stopMusic() {
+                System.out.println("Android için müzik durduruldu");
+            }
+        }
+
+        class DesktopMusicPlayer extends MusicPlayer {
+            @Override
+            public void playMusic(String parca) {
+                System.out.println("Desktop için " + parca + " müzik çalıyor");
+            }
+
+            @Override
+            public void saveMusic() {
+                System.out.println("Desktop için müzik kaydedildi");
+            }
+
+            @Override
+            public void stopMusic() {
+                System.out.println("Desktop için müzik durduruldu");
+            }
+        }
+    }
+}
